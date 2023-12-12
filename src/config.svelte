@@ -11,10 +11,9 @@
   export let log={}
   export let params={};
   // Variables
-  let modes = ["dice", "heap", "rect", "disc"];
+  let modes = ["instant", "sample time", "delay"];
   // let modes = ["dice", "heap", "rect", "disc", "randgrid", "randheap"];
   let colors = ["white", "black", "green", "yellow", "red", "blue"];
-  let opacities = [.1,.2,.3,.4,.5,.6,.7,.8,.9];
   let i = 3;
   let maxValue = 9;
   let valuesMenu = [0,1,2,3,4,5,6,7,8,9];
@@ -29,8 +28,9 @@
   		test_number: 0,
 	  	time_last_display: 0,
 		  text_diary: ["# Date Time (...) "],
-		  csv_diary: ["Test no, Test Name, Learner, Trainer, C_0, C_1, C_2, C_3, C_4, Value selected , Correction , Date, Answering Time (ms), Other Parameters"],
-		  text: new Blob(["# No test was executed before saving this text log. "], {type: 'text/plain'}),
+		  // csv_diary: ["Test no, Test Name, Learner, Trainer, C_0, C_1, C_2, C_3, C_4, Value selected , Correction , Date, Answering Time (ms), Other Parameters"],
+		  csv_diary: ["Test no, Test Name, Correction"],
+			text: new Blob(["# No test was executed before saving this text log. "], {type: 'text/plain'}),
 		  csv: new Blob(["# No test was executed before saving this csv log. "], {type: 'text/csv'})
 		};
 	}
@@ -154,19 +154,6 @@ Statistics: (<a download="stats.csv" href="{URL.createObjectURL(log.blob)}" id="
 		}}> {mode}
 		{/each}
 
-
-{#if params.mode === 'randgrid' || params.mode === 'randheap'}
-<h3>Grid Size = {params.gridSize}</h3>
-	{#each gridSizes as size}
-	<input type=radio bind:group={params.gridSize} value={size}> {size}
-	{/each}
-{/if}
-
-<h3>Set of Values = [{params.valuesSet[params.gridSize].sort((a, b) => a > b)}]</h3>
-{#each Array.from(Array(params.gridSize * params.gridSize + 1).keys()) as v}
-		<input type=checkbox bind:group={params.valuesSet[params.gridSize]} value={v}>{v}
-{/each}
-
 <h3>Colors: {params.fg} on {params.bg} </h3>
 <div>Foreground:
 	<!--suggestion jo ? 	<input type="color"/> -->
@@ -234,6 +221,24 @@ Statistics: (<a download="stats.csv" href="{URL.createObjectURL(log.blob)}" id="
 <label>Pressing time to exit game mode: {params.durationHomeButton} seconds
 	<input type=range bind:value={params.durationHomeButton} min=0 max=10 step=0.1>
 </label>
+
+<label>Sample time: {params.sampleTime / 1000} seconds
+	<input type=range bind:value={params.sampleTime} min=200 max=5000 step=100>
+</label>
+<label>Delay time (delay mode): {params.delayTime / 1000} seconds
+	<input type=range bind:value={params.delayTime} min=100 max=10000 step=100>
+</label>
+<label>Minimum sample time: {params.minSampleTime / 1000} seconds
+	<input type=range bind:value={params.minSampleTime} min=100 max=1000 step=100>
+</label>
+<label>Sample time decrement (sample time mode): {params.sampleTimeDecrement / 1000} seconds
+	<input type=range bind:value={params.sampleTimeDecrement} min=50 max=1000 step=100>
+</label>
+<label>Delay time increment (delay mode): {params.delayTimeIncrement / 1000} seconds
+	<input type=range bind:value={params.delayTimeIncrement} min=100 max=1000 step=100>
+</label>
+
+
 <br>
 <label>
 	<input type=checkbox bind:checked={params.timedRedirect} on:click={(event) => {

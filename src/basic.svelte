@@ -31,6 +31,8 @@
      <text x="30" y="130" font-size="150px" fill={base_color_dot} >1</text>
      {:else if n==0}
      <text x="30" y="130" font-size="150px" fill={base_color_dot} >0</text>
+     {:else}
+     <text x="75" y="85" font-size="18px" text-anchor="middle" fill={base_color_dot} >{n}</text>
      {/if}
         <!-- <circle cx="30" cy="130" r={radius} fill={base_color_dot} /> -->
     </svg>
